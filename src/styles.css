@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap");
+@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+body {
+  font-family: Rubik;
+  font-size: 14px;
+  padding: 2rem;
+  background-color: #cdb5f5;
+}

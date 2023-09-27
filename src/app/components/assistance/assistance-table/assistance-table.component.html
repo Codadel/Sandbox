@@ -1,0 +1,70 @@
+<ng-container *ngIf="{
+    assistances: assistances$ | async
+} as data">
+
+    <mat-form-field>
+        <mat-label>Recherche</mat-label>
+        <input matInput (keyup)="searchFieldChanges($event)">
+    </mat-form-field>
+
+    <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort (matSortChange)="assistanceSortChanges($event)">
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Aide / Organisation</th>
+            <td mat-cell *matCellDef="let element">
+                <span class="assistance-label">{{ element.name }}</span>
+                <br>
+                <span class="organization-label">{{ element.organization.name }}</span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef>Montant</th>
+            <td mat-cell *matCellDef="let element"> {{ element.amount }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expand">
+            <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button 
+                    (click)="(expandedElement = expandedElement === element ? null : element);
+                    $event.stopPropagation()">
+                <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+                <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+              </button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumnsWithExpand.length">
+                <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                    <div class="example-element-description">
+                        <!-- TODO: sanitize html content to avoid console warnings -->
+                        <div [innerHtml]="element.description"></div>
+                        <div [innerHtml]="element.amountSection"></div>
+                        <div [innerHtml]="element.conditionsSection"></div>
+                        <div [innerHtml]="element.proceduresSection"></div>
+                        <div class="element-detail-footer">
+                            <a mat-flat-button [href]="element.redirectUrl" [target]="'_blank'" color="primary">Faire ma demande d'aide</a>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row 
+            *matRowDef="let row; columns: displayedColumns;"
+            [class.example-expanded-row]="expandedElement === row"
+            (click)="expandedElement = expandedElement === row ? null : row">></tr>
+
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+    </table>
+
+    <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                    showFirstLastButtons>
+    </mat-paginator> -->
+
+
+</ng-container>
